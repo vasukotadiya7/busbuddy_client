@@ -14,7 +14,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    namespace 'com.vasukotadiya.bbclient'
+
+    namespace "com.vasukotadiya.bbclient"
     buildTypes {
         release {
             minifyEnabled false
