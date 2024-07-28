@@ -1,4 +1,4 @@
-package com.vasukotadiya.easygo;
+package com.vasukotadiya.bbclient;
 
 import org.junit.Test;
 
