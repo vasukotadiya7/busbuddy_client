@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "591422283286",
+    "firebase_url": "https://busbooking-8e2b7-default-rtdb.firebaseio.com",
+    "project_id": "busbooking-8e2b7",
+    "storage_bucket": "busbooking-8e2b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591422283286:android:1eabdbaec4fab50ed41f37",
+        "android_client_info": {
+          "package_name": "com.vasukotadiya.bbadmin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnKuBC1mCwbf_qNHI0GXJJ1d-VsNOjOzM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591422283286:android:37c21d009f9e9f07d41f37",
+        "android_client_info": {
+          "package_name": "com.vasukotadiya.bbclient"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnKuBC1mCwbf_qNHI0GXJJ1d-VsNOjOzM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
