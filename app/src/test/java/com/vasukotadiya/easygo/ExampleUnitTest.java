@@ -1,4 +1,4 @@
-package com.ajinkya.easygo;
+package com.vasukotadiya.easygo;
 
 import org.junit.Test;
 

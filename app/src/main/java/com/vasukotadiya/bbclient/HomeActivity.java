@@ -35,7 +35,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ajinkya.easygo.R;
+import com.vasukotadiya.bbclient.R;
 import com.vasukotadiya.bbclient.model.BusModel;
 import com.vasukotadiya.bbclient.model.IDs;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;

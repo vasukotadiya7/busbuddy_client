@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vasukotadiya.bbclient.model.PassengerInfo;
-import com.ajinkya.easygo.R;
+import com.vasukotadiya.bbclient.R;
 
 import java.util.ArrayList;
 

@@ -1,10 +1,7 @@
 package com.vasukotadiya.bbclient;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ajinkya.easygo.R;
+import com.vasukotadiya.bbclient.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -22,7 +19,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class MyTickets extends AppCompatActivity {
@@ -35,7 +31,7 @@ public class MyTickets extends AppCompatActivity {
         setContentView(R.layout.activity_my_tickets);
 
         Toolbar toolbar = findViewById(R.id.toolbar2);
-        toolbar.setTitle("EasyGo");
+        toolbar.setTitle("BusBuddy");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

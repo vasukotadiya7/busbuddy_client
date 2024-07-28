@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ajinkya.easygo.R;
+import com.vasukotadiya.bbclient.R;
 
 public class BusInfoModel extends RecyclerView.ViewHolder {
     View mView;
