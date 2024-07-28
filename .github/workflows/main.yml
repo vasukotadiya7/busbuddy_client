@@ -37,10 +37,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag_name: v0.5.0
-        release_name: Automatic Pre-Release
+        tag_name: v0.0.1
+        release_name: Automatic Release
         draft: false
-        prerelease: true
+        prerelease: false
 
     - name: Upload APK to Release
       id: upload-release-asset 
