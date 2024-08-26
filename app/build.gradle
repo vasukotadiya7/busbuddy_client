@@ -43,4 +43,5 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
     implementation 'com.firebaseui:firebase-ui-database:7.2.0'
     implementation 'dev.shreyaspatil.EasyUpiPayment:EasyUpiPayment:3.0.3'
+    implementation 'com.razorpay:checkout:1.6.41'
 }

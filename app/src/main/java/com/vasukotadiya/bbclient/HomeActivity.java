@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -35,6 +36,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.vasukotadiya.bbclient.R;
 import com.vasukotadiya.bbclient.model.BusModel;
 import com.vasukotadiya.bbclient.model.IDs;
@@ -139,7 +141,7 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Log.e(TAG, "Initialize: currentUser"+ firebaseUser);
         String userId = firebaseUser.getUid();
-        database = FirebaseDatabase.getInstance("https://book-my-ticket-ebe24-default-rtdb.asia-southeast1.firebasedatabase.app").getReference()
+        database = FirebaseDatabase.getInstance("https://busbooking-8e2b7-default-rtdb.firebaseio.com").getReference()
                 .child("Users").child(userId);
         Log.e(TAG, "Initialize: database "+database );
         setDateToEditText(TvDate);
@@ -148,6 +150,7 @@ public class HomeActivity extends AppCompatActivity {
             setupDrawerContent(nvDrawer);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+
         }
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
@@ -262,7 +265,22 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-
+                                holder.blCard.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent in = new Intent(HomeActivity.this,TicketBooking.class);
+                                        in.putExtra("EndTime",endTime);
+                                        in.putExtra("StartTime",startTime);
+                                        in.putExtra("BusNo",BusNo);
+                                        in.putExtra("NumberOfSeat",NoOfSit);
+                                        in.putExtra("BusType",TypeSit);
+                                        in.putExtra("FromLocation", fromLocation);
+                                        in.putExtra("ToLocation", toLocation);
+                                        in.putExtra("Date", Date);
+                                        in.putExtra("Price",Ticket_price);
+                                        startActivity(in);
+                                    }
+                                });
                             }
 
                         }
@@ -380,7 +398,7 @@ public class HomeActivity extends AppCompatActivity {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = Objects.requireNonNull(dataSnapshot.child("Name").getValue()).toString();
+                String name = dataSnapshot.child("Name").getValue().toString();
                 String email = Objects.requireNonNull(dataSnapshot.child("Email").getValue()).toString();
                 UserName.setText(name);
                 UserMail.setText(email);
@@ -392,6 +410,7 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+
 
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
