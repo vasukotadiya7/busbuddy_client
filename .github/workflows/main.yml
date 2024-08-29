@@ -37,7 +37,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag_name: v0.0.3
+        tag_name: v0.0.5
         release_name: Automatic Release
         draft: false
         prerelease: false

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
 import com.vasukotadiya.bbclient.adapters.PassengerListAdapter;
 import com.vasukotadiya.bbclient.model.PassengerInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,10 +45,13 @@ import java.util.Objects;
 
 import dev.shreyaspatil.easyupipayment.EasyUpiPayment;
 import dev.shreyaspatil.easyupipayment.listener.PaymentStatusListener;
-import dev.shreyaspatil.easyupipayment.model.PaymentApp;
-import dev.shreyaspatil.easyupipayment.model.TransactionDetails;
 
-public class TicketBooking extends AppCompatActivity implements PaymentStatusListener {
+//import dev.shreyaspatil.easyupipayment.EasyUpiPayment;
+//import dev.shreyaspatil.easyupipayment.listener.PaymentStatusListener;
+//import dev.shreyaspatil.easyupipayment.model.PaymentApp;
+//import dev.shreyaspatil.easyupipayment.model.TransactionDetails;
+
+public class TicketBooking extends AppCompatActivity implements PaymentResultListener {
 
     private TextView BT_BusNumber, BK_Date, BT_FromLocation, BT_ToLocation, BT_StartTime, BT_EndTime, BT_SeatAvailable, BT_BusType, BT_TotalPrice;
     private EditText BT_PassengerName, BT_PhoneNo;
@@ -340,10 +344,10 @@ public class TicketBooking extends AppCompatActivity implements PaymentStatusLis
                 HashMap<String, Object> ticketInformation = new HashMap<>();
                 ticketInformation.put("PassengerName", arrayList.get(a).getPassengerName());
                 ticketInformation.put("PassengerPhone", arrayList.get(a).getPhoneNumber());
-                ticketInformation.put("BusNumber", BusNumber);
+                ticketInformation.put("BusNo", BusNumber);
                 ticketInformation.put("Date", Date);
-                ticketInformation.put("From", FromLocation);
-                ticketInformation.put("TO", ToLocation);
+                ticketInformation.put("FromLocation", FromLocation);
+                ticketInformation.put("ToLocation", ToLocation);
                 ticketInformation.put("StartTime", startTime);
                 ticketInformation.put("EndTime", endTime);
                 ticketInformation.put("BusType", BusType);
@@ -377,42 +381,55 @@ public class TicketBooking extends AppCompatActivity implements PaymentStatusLis
 
     }
 
-    @Override
-    public void onTransactionCancelled() {
-        Toast.makeText(this, "Cancelled By User", Toast.LENGTH_SHORT).show();
-    }
+//    @Override
+//    public void onTransactionCancelled() {
+//        Toast.makeText(this, "Cancelled By User", Toast.LENGTH_SHORT).show();
+//    }
+//
+//    @Override
+//    public void onTransactionCompleted(@NonNull TransactionDetails transactionDetails) {
+//        // Transaction Completed
+//        Log.d("TransactionDetails", transactionDetails.toString());
+//        TransactionDetails = transactionDetails.toString();
+//        switch (transactionDetails.getTransactionStatus()) {
+//            case SUCCESS:
+//                onTransactionSuccess();
+//                break;
+//            case FAILURE:
+//                onTransactionFailed();
+//                break;
+//            case SUBMITTED:
+//                onTransactionSubmitted();
+//                break;
+//        }
+//    }
+
+//    private void onTransactionSuccess() {
+//        // Payment Success
+//        Toast.makeText(this, "Transaction Completed Successfully...", Toast.LENGTH_LONG).show();
+//        Book_Ticket();
+//    }
+//
+//    private void onTransactionSubmitted() {
+//        // Payment Pending
+//        Toast.makeText(this, "Pending | Submitted", Toast.LENGTH_LONG).show();
+//    }
+//
+//    private void onTransactionFailed() {
+//        // Payment Failed
+//        Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
+//
+//    }
 
     @Override
-    public void onTransactionCompleted(@NonNull TransactionDetails transactionDetails) {
-        // Transaction Completed
-        Log.d("TransactionDetails", transactionDetails.toString());
-        TransactionDetails = transactionDetails.toString();
-        switch (transactionDetails.getTransactionStatus()) {
-            case SUCCESS:
-                onTransactionSuccess();
-                break;
-            case FAILURE:
-                onTransactionFailed();
-                break;
-            case SUBMITTED:
-                onTransactionSubmitted();
-                break;
-        }
-    }
-
-    private void onTransactionSuccess() {
-        // Payment Success
+    public void onPaymentSuccess(String s) {
         Toast.makeText(this, "Transaction Completed Successfully...", Toast.LENGTH_LONG).show();
         Book_Ticket();
     }
 
-    private void onTransactionSubmitted() {
-        // Payment Pending
-        Toast.makeText(this, "Pending | Submitted", Toast.LENGTH_LONG).show();
-    }
-
-    private void onTransactionFailed() {
-        // Payment Failed
+    @Override
+    public void onPaymentError(int i, String s) {
         Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
+
     }
 }

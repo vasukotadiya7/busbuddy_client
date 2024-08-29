@@ -2,95 +2,95 @@ package com.vasukotadiya.bbclient.model;
 
 
 public class TicketModel {
-    private String busNo;
-    private String date;
-    private String fromLocation;
-    private String toLocation;
-    private String startTime;
-    private String endTime;
-    private String passengerName;
-    private String passengerPhone;
-    private String busType;
-    private String seatNo;
+    private String BusNo;
+    private String Date;
+    private String FromLocation;
+    private String ToLocation;
+    private String StartTime;
+    private String EndTime;
+    private String PassengerName;
+    private String PassengerPhone;
+    private String BusType;
+    private String SeatNo;
 
     public String getBusNo() {
-        return busNo;
+        return BusNo;
     }
 
     public void setBusNo(String busNo) {
-        this.busNo = busNo;
+        this.BusNo = busNo;
     }
 
     public String getDate() {
-        return date;
+        return Date;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.Date = date;
     }
 
     public String getFromLocation() {
-        return fromLocation;
+        return FromLocation;
     }
 
     public void setFromLocation(String fromLocation) {
-        this.fromLocation = fromLocation;
+        this.FromLocation = fromLocation;
     }
 
     public String getToLocation() {
-        return toLocation;
+        return ToLocation;
     }
 
     public void setToLocation(String toLocation) {
-        this.toLocation = toLocation;
+        this.ToLocation = toLocation;
     }
 
     public String getStartTime() {
-        return startTime;
+        return StartTime;
     }
 
     public void setStartTime(String startTime) {
-        this.startTime = startTime;
+        this.StartTime = startTime;
     }
 
     public String getEndTime() {
-        return endTime;
+        return EndTime;
     }
 
     public void setEndTime(String endTime) {
-        this.endTime = endTime;
+        this.EndTime = endTime;
     }
 
     public String getPassengerName() {
-        return passengerName;
+        return PassengerName;
     }
 
     public void setPassengerName(String passengerName) {
-        this.passengerName = passengerName;
+        this.PassengerName = passengerName;
     }
 
     public String getPassengerPhone() {
-        return passengerPhone;
+        return PassengerPhone;
     }
 
     public void setPassengerPhone(String passengerPhone) {
-        this.passengerPhone = passengerPhone;
+        this.PassengerPhone = passengerPhone;
     }
 
     public String getBusType() {
-        return busType;
+        return BusType;
     }
 
     public void setBusType(String busType) {
-        this.busType = busType;
+        this.BusType = busType;
     }
 
     public String getSeatNo() {
-        return seatNo;
+        return SeatNo;
     }
 
     public void setSeatNo(String seatNo) {
-        this.seatNo = seatNo;
+        this.SeatNo = seatNo;
     }
 
 
