@@ -1,6 +1,8 @@
 package com.vasukotadiya.bbclient.model;
 
 
+import android.text.BoringLayout;
+
 public class TicketModel {
     private String BusNo;
     private String Date;
@@ -12,6 +14,8 @@ public class TicketModel {
     private String PassengerPhone;
     private String BusType;
     private String SeatNo;
+    private  String Price;
+    private Boolean isCanceled;
 
     public String getBusNo() {
         return BusNo;
@@ -93,6 +97,20 @@ public class TicketModel {
         this.SeatNo = seatNo;
     }
 
+    public String getPrice() {
+        return Price;
+    }
 
+    public Boolean getisCanceled() {
+        return isCanceled;
+    }
+
+    public void setPrice(String price) {
+        Price = price;
+    }
+
+    public void setisCanceled(Boolean canceled) {
+        isCanceled = canceled;
+    }
 }
 

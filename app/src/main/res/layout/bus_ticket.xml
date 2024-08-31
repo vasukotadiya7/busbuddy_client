@@ -292,6 +292,18 @@
                 android:gravity="center"
                 android:rotation="90"
                 android:src="@drawable/barcode" />
+
+
         </RelativeLayout>
     </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/BtnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loadbusview"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/primaryTextColor"
+        android:text="Cancel" />
 </RelativeLayout>

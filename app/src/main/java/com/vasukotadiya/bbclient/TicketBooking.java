@@ -2,13 +2,19 @@ package com.vasukotadiya.bbclient;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Application;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +65,7 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
     private RecyclerView recyclerView;
     private ArrayList<PassengerInfo> arrayList;
 
-
+    private TextView TV_CP;
     private String BusNumber;
     private String Date;
     private String FromLocation;
@@ -70,7 +76,8 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
     private String BusType;
     private String TicketPrice;
 
-    private String TransactionDetails;
+
+    private String TransactionID;
 
     private final String UPI = "paytmqr1y11356oue@paytm";
     private EasyUpiPayment easyUpiPayment;
@@ -106,6 +113,8 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        TV_CP.setOnClickListener(View-> ShowCPDialog());
 
 
         btnAddPassenger.setOnClickListener(new View.OnClickListener() {
@@ -236,7 +245,7 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
 
     private void Instantiate() {
         Toolbar toolbar = findViewById(R.id.toolbar1);
-        toolbar.setTitle("EasyGo");
+        toolbar.setTitle("BusBuddy");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -257,6 +266,7 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
         BT_TotalPrice = findViewById(R.id.BT_TotalPrice);
         btnPay = findViewById(R.id.BT_PayBtn);
 
+        TV_CP=findViewById(R.id.tv_cancelpolicy);
     }
 
 
@@ -293,7 +303,26 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
         configure.dismiss();
     }
 
+    private void ShowCPDialog(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("Cancellation Policy").setCancelable(false).setMessage("For All Buses It Is Same");
+        LinearLayout linearLayout=new LinearLayout(this);
+        final ImageView imageView=new ImageView(this);
 
+        imageView.setImageResource(R.drawable.cp);
+        linearLayout.setBackgroundColor(Color.WHITE);
+        linearLayout.addView(imageView);
+        linearLayout.setPadding(10,10,10,10);
+        builder.setView(linearLayout);
+
+        builder.setPositiveButton("I AGREE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
 
 
     @SuppressLint("SetTextI18n")
@@ -335,6 +364,9 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
                 passengerInformation.put("PassengerPhone", arrayList.get(a).getPhoneNumber());
                 String seatNo =String.valueOf(Integer.parseInt(seatAvailable)-a);
                 passengerInformation.put("PassengerSeatNo", seatNo);
+                passengerInformation.put("Price",TicketPrice);
+                passengerInformation.put("TransactionID",TransactionID);
+                passengerInformation.put("isCanceled",false);
                 AdminTicketList.child(User+(seatNo)).updateChildren(passengerInformation);
             }
 
@@ -353,6 +385,9 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
                 ticketInformation.put("BusType", BusType);
                 String seatNo =String.valueOf(Integer.parseInt(seatAvailable)-a);
                 ticketInformation.put("SeatNo", seatNo);
+                ticketInformation.put("Price",TicketPrice);
+                ticketInformation.put("TransactionID",TransactionID);
+                ticketInformation.put("isCanceled",false);
                 usersTicketList.child(BusNumber+FromLocation+ToLocation+seatNo).updateChildren(ticketInformation);
             }
 
@@ -423,7 +458,10 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
 
     @Override
     public void onPaymentSuccess(String s) {
+
         Toast.makeText(this, "Transaction Completed Successfully...", Toast.LENGTH_LONG).show();
+
+        TransactionID=s;
         Book_Ticket();
     }
 
