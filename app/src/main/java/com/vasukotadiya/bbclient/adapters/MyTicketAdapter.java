@@ -1,9 +1,14 @@
 package com.vasukotadiya.bbclient.adapters;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +18,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.database.FirebaseArray;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.vasukotadiya.bbclient.HomeActivity;
 import com.vasukotadiya.bbclient.R;
 import com.vasukotadiya.bbclient.model.TicketModel;
 
@@ -28,6 +47,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicketAdapter.MyTicketAdapterViewHolder> {
     /**
@@ -36,11 +57,13 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
      *
      * @param options
      */
+
     Calendar bcalender=Calendar.getInstance();
     public MyTicketAdapter(@NonNull FirebaseRecyclerOptions<TicketModel> options) {
         super(options);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onBindViewHolder(@NonNull MyTicketAdapter.MyTicketAdapterViewHolder holder, int position, @NonNull TicketModel model) {
 //        TicketModel ticket = myList.get(position);
@@ -54,48 +77,65 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
         holder.SeatNo.setText(model.getSeatNo());
         holder.Passenger.setText(model.getPassengerName());
         if(model.getisCanceled()){
+
+            holder.Cancel.setBackgroundResource(R.color.material_dynamic_neutral30);
             holder.Cancel.setText("Canceled!!!");
             holder.Cancel.setClickable(false);
         }
         else {
-            holder.Cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+
                     SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-                    try {
                         String btime = model.getStartTime();
-                        Date date = sdf.parse(model.getDate());
+                        Date date = null;
+                        try {
+                               date = sdf.parse(model.getDate());
+                        } catch (ParseException e) {
+                                  e.printStackTrace();
+                        }
                         sdf.applyPattern("yyyy/MM/dd");
                         String bdate = sdf.format(date);
                         String cdate = sdf.format(new Date().getTime());
-                        bcalender.set(Calendar.YEAR, Integer.parseInt(bdate.split("/")[0]));
-                        bcalender.set(Calendar.MONTH, Integer.parseInt(bdate.split("/")[1]) - 1);
-                        bcalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(bdate.split("/")[2]));
+                        bcalender.set(Calendar.YEAR, Integer.parseInt(bdate.split("/")[0].trim()));
+                        bcalender.set(Calendar.MONTH, Integer.parseInt(bdate.split("/")[1].trim()) - 1);
+                        bcalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(bdate.split("/")[2].trim()));
 
                         if (btime.contains("PM")) {
                             bcalender.set(Calendar.AM_PM, Calendar.PM);
                             String btime1 = btime.replace("PM", "");
-                            bcalender.set(Calendar.HOUR, Integer.parseInt(btime1.split(":")[0]));
-                            bcalender.set(Calendar.MINUTE, Integer.parseInt(btime1.split(":")[0]));
+                            bcalender.set(Calendar.HOUR, Integer.parseInt(btime1.split(":")[0].trim()));
+                            bcalender.set(Calendar.MINUTE, Integer.parseInt(btime1.split(":")[0].trim()));
                         } else {
                             bcalender.set(Calendar.AM_PM, Calendar.AM);
                             String btime1 = btime.replace("AM", "");
 
-                            bcalender.set(Calendar.HOUR, Integer.parseInt(btime1.split(":")[0]));
-                            bcalender.set(Calendar.MINUTE, Integer.parseInt(btime1.split(":")[1]));
+                            bcalender.set(Calendar.HOUR, Integer.parseInt(btime1.split(":")[0].trim()));
+                            bcalender.set(Calendar.MINUTE, Integer.parseInt(btime1.split(":")[1].trim()));
                         }
                         long bt = bcalender.getTimeInMillis();
                         long ct = Calendar.getInstance().getTimeInMillis();
                         long diff = bt - ct;
                         diff = diff / 3600000;
-                        Toast.makeText(v.getContext(), String.valueOf(diff), Toast.LENGTH_SHORT).show();
-                        CancelDialog(diff,model.getPrice(), v.getContext());
+                        if(diff<=0){
+                            holder.Cancel.setBackgroundResource(R.color.green);
+                            holder.Cancel.setText("Give Review ");
+                        }
+                        else{
 
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+                            long finalDiff = diff;
+
+                            holder.Cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                                public void onClick(View v) {
+
+                                Toast.makeText(v.getContext(), String.valueOf(finalDiff), Toast.LENGTH_SHORT).show();
+                                String BusInfoA = model.getBusNo()+","+model.getFromLocation()+","+model.getToLocation()+","+model.getStartTime()+","+model.getEndTime();
+                                String BusInfoU = model.getBusNo()+model.getFromLocation()+model.getToLocation()+model.getSeatNo();
+
+
+                                CancelDialog(finalDiff,model.getPrice(),BusInfoA,BusInfoU,model.getDate(),model.getFromLocation()+model.getToLocation(),model.getBusNo(),model.getSeatNo(), v.getContext());
+                                }
+                            });
+                        }
         }
     }
 
@@ -128,7 +168,7 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
             this.Cancel= itemView.findViewById(R.id.BtnCancel);
         }
     }
-    public void CancelDialog(long diff,String price,Context context)
+    public void CancelDialog(long diff,String price,String busInfoA,String busInfoU,String Date,String FromToLocation,String BusNo, String seatno, Context context)
     {
         Double Price=Double.parseDouble(price);
         AlertDialog.Builder builder=new AlertDialog.Builder(context);
@@ -164,7 +204,104 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
         builder.setPositiveButton("Yes, Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(context, "Canceled Successfully", Toast.LENGTH_SHORT).show();
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                assert user != null;
+                String User = user.getUid();
+
+                DatabaseReference AdminTicketList = FirebaseDatabase.getInstance().getReference().
+                        child("Tickets").child("AdminSideCheck").child(Date).child(busInfoA);
+
+                DatabaseReference usersTicketList = FirebaseDatabase.getInstance().getReference().
+                        child("Tickets").child("UserSideCheck").child(User);
+
+                DatabaseReference busDetailsList = FirebaseDatabase.getInstance().getReference().
+                        child("Buses").child(Date).child(FromToLocation);
+
+                usersTicketList.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        HashMap<String, Object> ticketInformation = new HashMap<>();
+                        ticketInformation.put("isCanceled",true);
+                        usersTicketList.child(busInfoU).updateChildren(ticketInformation);
+
+//                        AdminTicketList.child(Date)
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(context, "Try after some time !", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+//                AdminTicketList.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        HashMap<String, Object> ticketInformation = new HashMap<>();
+//                        ticketInformation.put("isCanceled",true);
+//                        usersTicketList.child(User).updateChildren(ticketInformation);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
+                    busDetailsList.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String newSeats = snapshot.child(BusNo).child("NumberOfSeat").getValue(String.class);
+                    HashMap<String, Object> bus = new HashMap<>();
+                            HashMap<String, Object> busbooked = new HashMap<>();
+
+                            // add code of deleting that seatno from booked child
+                            GenericTypeIndicator<HashMap<String,Integer>> genericTypeIndicator=new GenericTypeIndicator<HashMap<String,Integer>>() {};
+
+
+//                            final HashMap<String,Integer> books= snapshot.child(BusNo).child("Booked").getValue(genericTypeIndicator);
+
+                    bus.put("NumberOfSeat", String.valueOf(Integer.parseInt(newSeats)+1));
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                books.forEach((k,v)->{
+//                                });
+//                            }
+                            busbooked.put(seatno,0);
+                            busDetailsList.child(BusNo).child("Booked").updateChildren(busbooked);
+                    busDetailsList.child(BusNo).updateChildren(bus).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            dialog.dismiss();
+                            Toast.makeText(context, "Canceled Successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+
+                    });
+
+//                    Toast.makeText(context, newSeats, Toast.LENGTH_SHORT).show();
+//                    busDetailsList.addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            HashMap<String, Object> bus = new HashMap<>();
+//                            String newSeats = String.valueOf(Integer.parseInt(snapshot.child(BusNo).child("NumberOfSeat").getValue().toString()) + 1);
+//                            bus.put("NumberOfSeat", newSeats);
+//                            busDetailsList.child(BusNo).updateChildren(bus);
+////                            Toast.makeText(context, newSeats, Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+
                 dialog.dismiss();
             }
         });

@@ -1,6 +1,8 @@
 package com.vasukotadiya.bbclient;
 
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Application;
@@ -8,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -89,6 +92,9 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
     PassengerInfo passengerInfo;
     String str_total_price;
 
+    private ArrayList<Integer> selected;
+    private HashMap<String,Integer> booked;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +110,7 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
         configure.show();
         SetStringToTextView(configure);
         //GetNoOFPlace();
-
+        calculate_price();
 
         //Here I have created arraylist to call the data
         arrayList = new ArrayList<>();
@@ -121,6 +127,10 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View view) {
+                if(selected.size()-1<=arrayList.size()){
+                    Toast.makeText(TicketBooking.this, "Selected seats passenger added already", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String passengerName = BT_PassengerName.getText().toString();
                 String phoneNo = BT_PhoneNo.getText().toString();
                 if (!passengerName.equals("") && !phoneNo.equals("")) {
@@ -131,7 +141,7 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
                     adapter.notifyDataSetChanged();
                     BT_PassengerName.setText("");
                     BT_PhoneNo.setText("");
-                    calculate_price();
+//                    calculate_price();
                 } else
                     Toast.makeText(TicketBooking.this, "Please fill Passenger Details", Toast.LENGTH_SHORT).show();
             }
@@ -146,6 +156,10 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
                     if (no_of_seat <= 0) {
                         Toast.makeText(TicketBooking.this, "Sorry seats are full", Toast.LENGTH_LONG).show();
                     } else {
+                        if(selected.size()-1!=arrayList.size()){
+                            Toast.makeText(TicketBooking.this, "Please enter all passenger details", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         MakePayment();
                     }
 
@@ -205,7 +219,7 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
         Checkout checkout = new Checkout();
 
         // set your id as below
-        checkout.setKeyID("rzp_test_cH5xl8nmqlbJiZ");
+        checkout.setKeyID("rzp_test_mg1CDXoVq8oXYi");
 
         // set image
         checkout.setImage(R.drawable.bus);
@@ -282,7 +296,9 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
         seatAvailable = getIntent().getStringExtra("NumberOfSeat");
         BusType = getIntent().getStringExtra("BusType");
         TicketPrice = getIntent().getStringExtra("Price");
-
+//        booked=getIntent().getIntegerArrayListExtra("Booked");
+        booked= (HashMap<String, Integer>) getIntent().getSerializableExtra("Booked");
+        selected=getIntent().getIntegerArrayListExtra("Selected");
         String seatNoIDReference = FromLocation + ToLocation;
         seatNo = FirebaseDatabase.getInstance().getReference().child("Buses").child(Date).child(seatNoIDReference).child(BusNumber);
 
@@ -327,7 +343,8 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
 
     @SuppressLint("SetTextI18n")
     private void calculate_price() {
-        int number_of_traveller = arrayList.size();
+//        int number_of_traveller = arrayList.size();
+        int number_of_traveller = selected.size()-1;
         int Price = Integer.parseInt(TicketPrice);
         int total_price = Price * number_of_traveller;
 
@@ -336,17 +353,18 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
     }
 
     private void Book_Ticket() {
+        try{
+
+
         if (no_of_seat <= 0) {
             Toast.makeText(this, "Sorry, Seats Not Available...", Toast.LENGTH_LONG).show();
         } else {
 
 
-
-
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             assert user != null;
             String User = user.getUid();
-            String BusInfo = BusNumber+","+FromLocation+","+ToLocation+","+startTime+","+endTime;
+            String BusInfo = BusNumber + "," + FromLocation + "," + ToLocation + "," + startTime + "," + endTime;
 
 
             DatabaseReference AdminTicketList = FirebaseDatabase.getInstance().getReference().
@@ -362,12 +380,13 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
                 HashMap<String, Object> passengerInformation = new HashMap<>();
                 passengerInformation.put("PassengerName", arrayList.get(a).getPassengerName());
                 passengerInformation.put("PassengerPhone", arrayList.get(a).getPhoneNumber());
-                String seatNo =String.valueOf(Integer.parseInt(seatAvailable)-a);
+//                String seatNo =String.valueOf(Integer.parseInt(seatAvailable)-a);
+                String seatNo = String.valueOf(selected.get(a + 1));
                 passengerInformation.put("PassengerSeatNo", seatNo);
-                passengerInformation.put("Price",TicketPrice);
-                passengerInformation.put("TransactionID",TransactionID);
-                passengerInformation.put("isCanceled",false);
-                AdminTicketList.child(User+(seatNo)).updateChildren(passengerInformation);
+                passengerInformation.put("Price", TicketPrice);
+                passengerInformation.put("TransactionID", TransactionID);
+                passengerInformation.put("isCanceled", false);
+                AdminTicketList.child(User + (seatNo)).updateChildren(passengerInformation);
             }
 
 
@@ -383,14 +402,35 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
                 ticketInformation.put("StartTime", startTime);
                 ticketInformation.put("EndTime", endTime);
                 ticketInformation.put("BusType", BusType);
-                String seatNo =String.valueOf(Integer.parseInt(seatAvailable)-a);
+//                String seatNo =String.valueOf(Integer.parseInt(seatAvailable)-a);
+                String seatNo = String.valueOf(selected.get(a + 1));
                 ticketInformation.put("SeatNo", seatNo);
-                ticketInformation.put("Price",TicketPrice);
-                ticketInformation.put("TransactionID",TransactionID);
-                ticketInformation.put("isCanceled",false);
-                usersTicketList.child(BusNumber+FromLocation+ToLocation+seatNo).updateChildren(ticketInformation);
+                ticketInformation.put("Price", TicketPrice);
+                ticketInformation.put("TransactionID", TransactionID);
+                ticketInformation.put("isCanceled", false);
+                usersTicketList.child(BusNumber + FromLocation + ToLocation + seatNo).updateChildren(ticketInformation);
             }
 
+//            HashMap<String, Object> bookings = new HashMap<>();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                booked.forEach((k,v)->{
+//                    try{
+//                        bookings.put(String.valueOf(v), v);
+//                    }catch (IndexOutOfBoundsException e){
+//                        e.printStackTrace();
+//                    }
+//                    catch (NullPointerException ex){
+//                        ex.printStackTrace();
+//                    }
+//                });
+                selected.forEach((v) -> {
+                    booked.put(String.valueOf(v),v);
+                });
+            }
+
+            Log.d(TAG, "Book_Ticket: " + booked.toString());
+            Toast.makeText(this, booked.toString(), Toast.LENGTH_SHORT).show();
+            seatNo.child("Booked").setValue(booked);
 
 
             int new_val = Integer.parseInt(seatAvailable) - arrayList.size();
@@ -409,8 +449,11 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
             });
 
 
+        }
 
-
+        }catch (Exception e){
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Book_Ticket: "+e);
         }
 
 
@@ -468,6 +511,6 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
     @Override
     public void onPaymentError(int i, String s) {
         Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
-
+        Toast.makeText(this, "Messedup!!!!", Toast.LENGTH_SHORT).show();
     }
 }

@@ -304,6 +304,6 @@
         android:layout_below="@+id/loadbusview"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:background="@color/primaryTextColor"
+        android:background="#FF1504"
         android:text="Cancel" />
 </RelativeLayout>

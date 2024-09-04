@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,6 +38,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.vasukotadiya.bbclient.R;
 import com.vasukotadiya.bbclient.model.BusModel;
 import com.vasukotadiya.bbclient.model.IDs;
@@ -55,6 +57,7 @@ import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -253,7 +256,12 @@ public class HomeActivity extends AppCompatActivity {
                                 final String TypeSit = Objects.requireNonNull(dataSnapshot.child("BusType").getValue()).toString();
                                 final String NoOfSit = Objects.requireNonNull(dataSnapshot.child("NumberOfSeat").getValue()).toString();
                                 final String Ticket_price = Objects.requireNonNull(dataSnapshot.child("TicketPrice").getValue()).toString();
+//                                GenericTypeIndicator<ArrayList<Integer>> genericTypeIndicator=new GenericTypeIndicator<ArrayList<Integer>>() {};
+                                GenericTypeIndicator<HashMap<String,Integer>> genericTypeIndicator=new GenericTypeIndicator<HashMap<String,Integer>>() {};
 
+
+                                final HashMap<String,Integer> books=Objects.requireNonNull(dataSnapshot.child("Booked").getValue(genericTypeIndicator));
+//                                final ArrayList<Integer> books=Objects.requireNonNull(dataSnapshot.child("Booked").getValue(genericTypeIndicator));
                                 holder.settextBusno(BusNo);
                                 holder.settextDate(Date);
                                 holder.settextLocationEnd(toLocation);
@@ -268,7 +276,24 @@ public class HomeActivity extends AppCompatActivity {
                                 holder.blCard.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        Intent in = new Intent(HomeActivity.this,TicketBooking.class);
+//                                        Intent in = new Intent(HomeActivity.this,TicketBooking.class);
+//                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                            books.forEach((k,v)->{
+//                                                try{
+//
+//                                                Toast.makeText(HomeActivity.this, String.valueOf(v), Toast.LENGTH_SHORT).show();
+//                                                }catch (IndexOutOfBoundsException e){
+//                                                    e.printStackTrace();
+//                                                }
+//                                            });
+//                                        }
+//                                        Toast.makeText(HomeActivity.this, String.valueOf(books.size()), Toast.LENGTH_SHORT).show();
+                                        Intent in;
+                                        if(TypeSit.contains("seater")){
+                                            in = new Intent(HomeActivity.this,SeatViewActivity.class);
+                                        }else{
+                                            in = new Intent(HomeActivity.this,SeatViewActivity2.class);
+                                        }
                                         in.putExtra("EndTime",endTime);
                                         in.putExtra("StartTime",startTime);
                                         in.putExtra("BusNo",BusNo);
@@ -278,6 +303,8 @@ public class HomeActivity extends AppCompatActivity {
                                         in.putExtra("ToLocation", toLocation);
                                         in.putExtra("Date", Date);
                                         in.putExtra("Price",Ticket_price);
+                                        in.putExtra("Booked",books);
+
                                         startActivity(in);
                                     }
                                 });

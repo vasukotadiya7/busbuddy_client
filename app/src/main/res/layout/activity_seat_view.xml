@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SeatViewActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_shape_bk"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_login_bk"
+                android:contentDescription="@string/todo" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:text="Book Seat"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteTextColor"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/white"
+                    android:elevation="10dp"
+                    app:cardBackgroundColor="#E1F6FF"
+                    app:cardCornerRadius="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        android:padding="15dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/tvPrice"
+                            android:padding="10dp"
+                            android:orientation="horizontal">
+
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="20dp"
+                                android:paddingLeft="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/s1"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s8"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s9"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s16"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s17"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s24"
+                                    android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s25"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s32"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s33"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s40"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="20dp"
+                                android:paddingLeft="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/s2"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s7"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s10"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s15"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:layout_width="35dp"
+                                    android:id="@+id/s18"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s23"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s26"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s31"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s34"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s39"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="20dp"
+                                android:paddingLeft="150dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/s3"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s6"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s11"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s14"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s19"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s22"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s27"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s30"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s35"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s38"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="20dp"
+                                android:paddingLeft="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/s4"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s5"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s12"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s13"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s20"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s21"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s28"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s29"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s36"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                                <ImageView
+                                    android:id="@+id/s37"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_baseline_event_seat_empty"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp">
+                            <ImageView
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:src="@drawable/ic_baseline_event_seat_empty"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" =  Seat Available"
+                                android:textColor="@color/black"
+                                android:paddingTop="5dp"
+                                android:textSize="20dp"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp">
+                            <ImageView
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:src="@drawable/ic_baseline_event_seat_booked"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" =  Seat Already Booked"
+                                android:textColor="@color/black"
+                                android:paddingTop="5dp"
+                                android:textSize="20dp"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp">
+                            <ImageView
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:src="@drawable/ic_baseline_event_seat_selected"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" =  Seat Selected"
+                                android:textColor="@color/black"
+                                android:paddingTop="5dp"
+                                android:textSize="20dp"/>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+
+
+
+
+            </LinearLayout>
+        </ScrollView>
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bookbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primaryTextColor"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:text="Book Seats"/>
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back"
+        app:titleTextColor="@color/white" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
