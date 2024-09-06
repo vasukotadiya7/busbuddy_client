@@ -144,7 +144,8 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Log.e(TAG, "Initialize: currentUser"+ firebaseUser);
         String userId = firebaseUser.getUid();
-        database = FirebaseDatabase.getInstance("https://busbooking-8e2b7-default-rtdb.firebaseio.com").getReference()
+//        database = FirebaseDatabase.getInstance("https://busbooking-8e2b7-default-rtdb.firebaseio.com").getReference()
+        database = FirebaseDatabase.getInstance("https://bus-buddy-1adc9-default-rtdb.asia-southeast1.firebasedatabase.app").getReference()
                 .child("Users").child(userId);
         Log.e(TAG, "Initialize: database "+database );
         setDateToEditText(TvDate);
@@ -333,6 +334,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private void setDateToEditText(EditText editText) {
+
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -347,6 +349,7 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         };
+
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

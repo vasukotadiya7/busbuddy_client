@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "38416496511",
-    "firebase_url": "https://bus-buddy-1adc9-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "bus-buddy-1adc9",
-    "storage_bucket": "bus-buddy-1adc9.appspot.com"
+    "project_number": "591422283286",
+    "firebase_url": "https://busbooking-8e2b7-default-rtdb.firebaseio.com",
+    "project_id": "busbooking-8e2b7",
+    "storage_bucket": "busbooking-8e2b7.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:38416496511:android:c8092d1f1a0fa3a0a00c4a",
+        "mobilesdk_app_id": "1:591422283286:android:1eabdbaec4fab50ed41f37",
         "android_client_info": {
           "package_name": "com.vasukotadiya.bbadmin"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAftiDxqLRmsTE31sKary68GdkJDwjph4Y"
+          "current_key": "AIzaSyBnKuBC1mCwbf_qNHI0GXJJ1d-VsNOjOzM"
         }
       ],
       "services": {
@@ -27,7 +27,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:38416496511:android:1c825fce12fdd3a1a00c4a",
+        "mobilesdk_app_id": "1:591422283286:android:37c21d009f9e9f07d41f37",
         "android_client_info": {
           "package_name": "com.vasukotadiya.bbclient"
         }
@@ -35,7 +35,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAftiDxqLRmsTE31sKary68GdkJDwjph4Y"
+          "current_key": "AIzaSyBnKuBC1mCwbf_qNHI0GXJJ1d-VsNOjOzM"
         }
       ],
       "services": {
