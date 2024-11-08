@@ -28,9 +28,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 import com.vasukotadiya.bbclient.adapters.PassengerListAdapter;
+import com.vasukotadiya.bbclient.adapters.ReviewsAdapter;
 import com.vasukotadiya.bbclient.model.PassengerInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,6 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.vasukotadiya.bbclient.model.ReviewModel;
 
 
 import org.json.JSONException;
@@ -65,8 +71,9 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
     private TextView BT_BusNumber, BK_Date, BT_FromLocation, BT_ToLocation, BT_StartTime, BT_EndTime, BT_SeatAvailable, BT_BusType, BT_TotalPrice;
     private EditText BT_PassengerName, BT_PhoneNo;
     private Button btnPay, btnAddPassenger;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView,customerReview;
     private ArrayList<PassengerInfo> arrayList;
+    private ArrayList<ReviewModel> reviewList;
 
     private TextView TV_CP;
     private String BusNumber;
@@ -85,6 +92,9 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
     private final String UPI = "paytmqr1y11356oue@paytm";
     private EasyUpiPayment easyUpiPayment;
 
+    private boolean isPassengerInfoExpanded = false;
+    private boolean isCancellationPolicyExpanded = false;
+    private boolean isCustomerReviewsExpanded = false;
 
     private DatabaseReference seatNo;
     private int no_of_seat;
@@ -120,7 +130,10 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        TV_CP.setOnClickListener(View-> ShowCPDialog());
+        reviewList=new ArrayList<>();
+
+
+//        TV_CP.setOnClickListener(View-> ShowCPDialog());
 
 
         btnAddPassenger.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +184,37 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
             }
         });
 
+        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Reviews").child(BusNumber);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                ReviewModel reviewModel=snapshot.getValue(ReviewModel.class);
+                try {
+
+                GenericTypeIndicator<HashMap<String,String>> genericTypeIndicator=new GenericTypeIndicator<HashMap<String,String>>() {};
+                final HashMap<String,String> reviews=Objects.requireNonNull(snapshot.getValue(genericTypeIndicator));
+
+                for (Map.Entry<String, String> entry : reviews.entrySet()) {
+                    reviewList.add(new ReviewModel(entry.getKey(), entry.getValue()));
+                }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.d(TAG, "onDataChange: "+e.getMessage());
+                    return;
+                }
+
+                ReviewsAdapter reviewsAdapter=new ReviewsAdapter(reviewList);
+                customerReview.setHasFixedSize(true);
+                customerReview.setLayoutManager(new LinearLayoutManager(TicketBooking.this));
+                customerReview.setAdapter(reviewsAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
@@ -277,10 +321,41 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
         BT_PhoneNo = findViewById(R.id.BT_passengerPhone);
         btnAddPassenger = findViewById(R.id.BT_AddPassenger);
         recyclerView = findViewById(R.id.BT_RecyclerView);
+        customerReview=findViewById(R.id.PR_recyclerview);
         BT_TotalPrice = findViewById(R.id.BT_TotalPrice);
         btnPay = findViewById(R.id.BT_PayBtn);
 
-        TV_CP=findViewById(R.id.tv_cancelpolicy);
+//        TV_CP=findViewById(R.id.tv_cancelpolicy);
+
+        // Toggle Passenger Information
+        findViewById(R.id.passenger_info).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPassengerInfoExpanded = !isPassengerInfoExpanded;
+                findViewById(R.id.passenger_info_card).setVisibility(
+                        isPassengerInfoExpanded ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        // Toggle Cancellation Policy
+        findViewById(R.id.cancellation_policy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCancellationPolicyExpanded = !isCancellationPolicyExpanded;
+                findViewById(R.id.cancellation_policy_card).setVisibility(
+                        isCancellationPolicyExpanded ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        // Toggle Customer Reviews
+        findViewById(R.id.customer_reviews).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCustomerReviewsExpanded = !isCustomerReviewsExpanded;
+                findViewById(R.id.customer_reviews_card).setVisibility(
+                        isCustomerReviewsExpanded ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
 
@@ -386,6 +461,7 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
                 passengerInformation.put("Price", TicketPrice);
                 passengerInformation.put("TransactionID", TransactionID);
                 passengerInformation.put("isCanceled", false);
+                passengerInformation.put("RefundAmount",0);
                 AdminTicketList.child(User + (seatNo)).updateChildren(passengerInformation);
             }
 
@@ -408,6 +484,7 @@ public class TicketBooking extends AppCompatActivity implements PaymentResultLis
                 ticketInformation.put("Price", TicketPrice);
                 ticketInformation.put("TransactionID", TransactionID);
                 ticketInformation.put("isCanceled", false);
+                ticketInformation.put("isReviewed",false);
                 usersTicketList.child(BusNumber + FromLocation + ToLocation + seatNo).updateChildren(ticketInformation);
             }
 

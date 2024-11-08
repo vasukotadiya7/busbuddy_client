@@ -16,6 +16,23 @@ public class TicketModel {
     private String SeatNo;
     private  String Price;
     private Boolean isCanceled;
+    private Boolean isReviewed;
+
+    public Boolean getCanceled() {
+        return isCanceled;
+    }
+
+    public void setCanceled(Boolean canceled) {
+        isCanceled = canceled;
+    }
+
+    public Boolean getisReviewed() {
+        return isReviewed;
+    }
+
+    public void setisReviewed(Boolean reviewed) {
+        isReviewed = reviewed;
+    }
 
     public String getBusNo() {
         return BusNo;

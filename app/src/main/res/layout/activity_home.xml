@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer"
-    tools:openDrawer="start"
     tools:context="com.vasukotadiya.bbclient.HomeActivity">
+<!--    tools:openDrawer="end"-->
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,9 +36,12 @@ import com.vasukotadiya.bbclient.model.TicketModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicketAdapter.MyTicketAdapterViewHolder> {
     /**
@@ -68,6 +73,11 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
 
             holder.Cancel.setBackgroundResource(R.color.material_dynamic_neutral30);
             holder.Cancel.setText("Canceled!!!");
+            holder.Cancel.setClickable(false);
+        }
+        else if(model.getisReviewed()){
+            holder.Cancel.setBackgroundResource(R.color.green);
+            holder.Cancel.setText("Thanks for reviewing :) ");
             holder.Cancel.setClickable(false);
         }
         else {
@@ -106,6 +116,7 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
                         if(diff<=0){
                             holder.Cancel.setBackgroundResource(R.color.green);
                             holder.Cancel.setText("Give Review ");
+                            holder.Cancel.setOnClickListener(v->reviewDialog(model.getDate(),model.getFromLocation()+model.getToLocation(),model.getBusNo(),model.getSeatNo(),v.getContext()));
                         }
                         else{
 
@@ -126,6 +137,7 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
                         }
         }
     }
+
 
 
 
@@ -156,6 +168,60 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
             this.Cancel= itemView.findViewById(R.id.BtnCancel);
         }
     }
+
+    private void reviewDialog(String Date,String FromToLocation,String Busno,String SeatNo,Context context) {
+        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+        LinearLayout linearLayout=new LinearLayout(context);
+        EditText editText=new EditText(context);
+        LinearLayout.LayoutParams lp =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                    LinearLayout.LayoutParams.MATCH_PARENT);
+        editText.setLayoutParams(lp);
+
+        builder.setTitle("User Review").setMessage("Write a brief review for bus no "+Busno).setCancelable(true);
+        linearLayout.setBackgroundColor(Color.WHITE);
+        linearLayout.addView(editText);
+        linearLayout.setPadding(10,10,10,10);
+        builder.setView(linearLayout);
+
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseUser firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
+                assert firebaseUser!=null;
+                String User=firebaseUser.getUid();
+
+                DatabaseReference Reviews=FirebaseDatabase.getInstance().getReference().child("Reviews");
+                DatabaseReference UserTicket=FirebaseDatabase.getInstance().getReference().child("Tickets").child("UserSideCheck").child(User);
+                HashMap<String,Object > userticket=new HashMap<>();
+
+                HashMap<String,Object > review=new HashMap<>();
+                userticket.put("isReviewed",true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    review.put(String.valueOf(new Date().toLocaleString()),editText.getText().toString());
+                }
+                UserTicket.child(Busno+FromToLocation+SeatNo).updateChildren(userticket).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                Reviews.child(Busno).updateChildren(review);
+                        dialog.dismiss();
+                        Toast.makeText(context, "Thank you for reviewing bus", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
+    }
+
     public void CancelDialog(long diff,String price,String busInfoA,String busInfoU,String Date,String FromToLocation,String BusNo, String seatno, Context context)
     {
         Double Price=Double.parseDouble(price);
@@ -189,6 +255,7 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
         linearLayout.setPadding(10,10,10,10);
         builder.setView(linearLayout);
 
+        Double finalPrice = Price;
         builder.setPositiveButton("Yes, Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -213,7 +280,6 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
                         ticketInformation.put("isCanceled",true);
                         usersTicketList.child(busInfoU).updateChildren(ticketInformation);
 
-//                        AdminTicketList.child(Date)
                     }
 
                     @Override
@@ -222,19 +288,20 @@ public class MyTicketAdapter extends FirebaseRecyclerAdapter<TicketModel,MyTicke
                     }
                 });
 
-//                AdminTicketList.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        HashMap<String, Object> ticketInformation = new HashMap<>();
-//                        ticketInformation.put("isCanceled",true);
-//                        usersTicketList.child(User).updateChildren(ticketInformation);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
+                AdminTicketList.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        HashMap<String, Object> ticketInformation = new HashMap<>();
+                        ticketInformation.put("isCanceled",true);
+                        ticketInformation.put("RefundAmount",String.valueOf(finalPrice));
+                        AdminTicketList.child(User+seatno).updateChildren(ticketInformation);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
                     busDetailsList.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

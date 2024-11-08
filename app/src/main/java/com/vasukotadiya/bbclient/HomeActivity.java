@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,6 +79,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private DatabaseReference database, databaseReference;
     private Button SearchBtn;
+    private ImageView SwapImamge;
     private ProgressDialog progressDialog;
     private String toLocPin, fromLocPin, toLocation,fromLocation, FinalDate, path;
     private RecyclerView recyclerView;
@@ -115,6 +117,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        SwapImamge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String temp=FromLocation.getText().toString();
+                FromLocation.setText(ToLocation.getText().toString());
+                ToLocation.setText(temp);
+            }
+        });
+
     }
 
 
@@ -133,6 +144,7 @@ public class HomeActivity extends AppCompatActivity {
         TvDate = findViewById(R.id.Date);
         SearchBtn = findViewById(R.id.SearchBus);
 
+        SwapImamge=findViewById(R.id.swapicon);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Configuring Environment");
@@ -353,7 +365,9 @@ public class HomeActivity extends AppCompatActivity {
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(HomeActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                DatePickerDialog datePickerDialog =new DatePickerDialog(HomeActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
+                datePickerDialog.show();
             }
         });
     }
